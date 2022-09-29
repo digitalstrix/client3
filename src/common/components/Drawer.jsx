@@ -707,7 +707,7 @@ function PersistentDrawerLeft(props) {
             <ListItemText primary='View Question' />
           </ListItem>
 
-          <ListItem
+          {/* <ListItem
             button
             key='opOne'
             component={NavLink}
@@ -723,9 +723,9 @@ function PersistentDrawerLeft(props) {
               <VerifiedUserOutlinedIcon />
             </ListItemIcon>
             <ListItemText primary='Create Question' />
-          </ListItem>
+          </ListItem> */}
 
-          <ListItem
+          {/* <ListItem
             button
             key='opThree'
             component={NavLink}
@@ -741,7 +741,7 @@ function PersistentDrawerLeft(props) {
               <TimeIcon />
             </ListItemIcon>
             <ListItemText primary='Edit Question' />
-          </ListItem>
+          </ListItem> */}
         </List>
       </Collapse>
     );

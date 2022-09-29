@@ -27,7 +27,7 @@ const Createquestion = (props) => {
         console.log(ans);
         if(ans.status)
         {
-            let ans1 = await context.createAnswer({ QuestionId: "3", UserId:"1001", answer: value1.answer });
+            let ans1 = await context.createAnswer({ QuestionId: "3", UserId:"1", answer: value1.answer });
             console.log(ans1);
             if (ans1.status) {
                 props.showAlert(true);

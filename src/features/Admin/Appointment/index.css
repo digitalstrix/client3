@@ -19,3 +19,12 @@
 .content{
     margin-top: 2rem;
 }
+.dropdown-content{
+    z-index: 999 !important;
+}
+.ql-editor{
+    min-height: 300px !important;
+}
+.css-p4urri-MuiPaper-root-MuiCard-root{
+    min-width: 18.5rem !important;
+}

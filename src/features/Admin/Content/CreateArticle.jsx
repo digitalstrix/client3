@@ -25,18 +25,15 @@ var toolbarOptions = [
     ['clean']
 ];
 
-const options = [
-    { label: "Grapes 🍇", value: "grapes" },
-    { label: "Mango 🥭", value: "mango" },
-    { label: "Strawberry 🍓", value: "strawberry", disabled: true },
-];
+const options = [];
 
 const Createarticle = (props) => {
     const [value1, setValue1] = useState({
         title: "",
         image: "",
         status: "",
-        slug:""
+        slug:"",
+        file:"",
     })
     const [value, setValue] = useState({
         richText: '',
@@ -45,6 +42,22 @@ const Createarticle = (props) => {
     });
     const [selected, setSelected] = useState([]);
     const context = useContext(MainContext);
+
+    useEffect(()=>{
+        getData();
+    },[]);
+
+    const getData=async()=>{
+        const ans=await context.getCategory();
+        console.log(ans.data);
+        for(let i of ans.data)
+        {
+            options.push({
+                label:i.name,
+                value:i.id
+            });
+        }
+    };
 
     const rteChange1 = (content, delta, source, editor) => {
         setValue({
@@ -55,7 +68,7 @@ const Createarticle = (props) => {
     };
 
     const handleChange = (e) => {
-        if (e.target.name === "image") {
+        if (e.target.name === "image" || e.target.name === "file") {
             setValue1({ ...value1, [e.target.name]: e.target.files[0] });
         }
         else {
@@ -74,9 +87,9 @@ const Createarticle = (props) => {
         {
             str+=i.value+",";
         }
-        console.log(str.slice(0,-1));
+        // console.log(str.slice(0,-1));
 
-        let ans = await context.createPost({title: value1.title,type: "test Type",slug: value1.slug,categories: str,content: value.richText,file_link: value1.image,status: value1.status, created_by_user: "1111111" });
+        let ans = await context.createPost({title: value1.title,type: "test Type",slug: value1.slug,categories: str.slice(0,-1),content: value.richText,file_link: value1.image,status: value1.status, created_by_user: "1", file:value1.file });
         console.log(ans);
         if(ans.status)
         {
@@ -103,6 +116,15 @@ const Createarticle = (props) => {
                     <TextField id="slug" label="URL Slug" sx={{ width: "100%" }} name="slug" onChange={handleChange} value={value1.slug} variant="outlined" />
                 </div>
                 <div style={{ marginBottom: "12px" }}>
+                    <h3>Select Categories</h3>
+                    <MultiSelect
+                        options={options}
+                        value={selected}
+                        onChange={setSelected}
+                        labelledBy="Select"
+                    />
+                </div>
+                <div style={{ marginBottom: "12px" }}>
                     <h3>Content</h3>
                     <ReactQuill theme="snow" value={value.richText} placeholder="Write here .." onChange={rteChange1} modules={{ toolbar: toolbarOptions }} />
                 </div>
@@ -123,19 +145,13 @@ const Createarticle = (props) => {
                     </FormControl>
                 </div>
                 <div style={{ marginBottom: "12px" }}>
+                    <h3>Upload File</h3>
+                    <input type="file" name="file" onChange={handleChange} id="file" />
+                </div>
+                <div style={{ marginBottom: "12px" }}>
                     <h3>Upload Featured Image</h3>
                     <input type="file" name="image" onChange={handleChange} id="image" />
                 </div>
-                <div style={{ marginBottom: "12px" }}>
-                    <h3>Select Categories</h3>
-                    <MultiSelect
-                        options={options}
-                        value={selected}
-                        onChange={setSelected}
-                        labelledBy="Select"
-                    />
-                </div>
-
                 <Button type="submit" color="primary" variant="contained">Submit</Button>
             </form>
         </>

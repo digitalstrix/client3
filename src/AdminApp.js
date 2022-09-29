@@ -98,12 +98,12 @@ export default function AdminApp() {
             <PrivateRoute path='/doctor-settlements' component={DoctorSettlementsPage} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/user-engagement' component={UserEngagement} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/view-blog' component={Viewblog} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
-            <PrivateRoute path='/viewBlogDetails/:id' component={Viewblogdetail} portal={PORTAL_TYPE_IMM} />
+            <PrivateRoute path='/viewBlogDetails/:id' component={Viewblogdetail} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/create-article' component={Createarticle} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/edit-article/:id' component={Editarticle} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/view-categories' component={Viewcategories} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/view-podcast' component={Viewpodcast} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
-            <PrivateRoute path='/viewPodcastDetails/:id' component={Viewpodcastdetail} portal={PORTAL_TYPE_IMM} />
+            <PrivateRoute path='/viewPodcastDetails/:id' component={Viewpodcastdetail} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/create-podcast' component={Createpodcast} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/edit-podcast/:id' component={Editpodcast} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/view-podcast-categories' component={Viewpodcastcategories} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
@@ -114,8 +114,8 @@ export default function AdminApp() {
             <PrivateRoute path='/create-music' component={Createmusic} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/edit-music/:id' component={Editmusic} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/view-question' component={Viewquestion} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
-            <PrivateRoute path='/create-question' component={Createquestion} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
-            <PrivateRoute path='/edit-question' component={Editquestion} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
+            {/* <PrivateRoute path='/create-question' component={Createquestion} props1={{showAlert}} portal={PORTAL_TYPE_IMM} /> */}
+            <PrivateRoute path='/edit-question/:id' component={Editquestion} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/view-appointment' component={Viewappointment} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/create-appointment' component={Createappointment} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />
             <PrivateRoute path='/appointment-details/:id' component={Appointmentdetails} props1={{showAlert}} portal={PORTAL_TYPE_IMM} />

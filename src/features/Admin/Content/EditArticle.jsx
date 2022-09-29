@@ -26,18 +26,15 @@ var toolbarOptions = [
     ['clean']
 ];
 
-const options = [
-    { label: "Grapes 🍇", value: "grapes" },
-    { label: "Mango 🥭", value: "mango" },
-    { label: "Strawberry 🍓", value: "strawberry", disabled: true },
-];
+const options = [];
 
 const Editarticle = (props) => {
     const [value1, setValue1] = useState({
         title:"",
         image:"",
         status:"",
-        slug:""
+        slug:"",
+        file:""
     })
     const [value, setValue] = useState({
         richText: '',
@@ -53,13 +50,23 @@ const Editarticle = (props) => {
     },[]);
 
     const getData=async()=>{
+        const ans1=await context.getCategory();
+        for(let i of ans1.data)
+        {
+            options.push({
+                label:i.name,
+                value:i.id
+            });
+        }
+
         const ans=await context.getPost(id);
         console.log(ans.data[0]);
         setValue1({
             title:ans.data[0].title,
             image:"",
             status:ans.data[0].status.toLowerCase(),
-            slug:ans.data[0].slug
+            slug:ans.data[0].slug,
+            file:""
         });
         setValue({
             richText:ans.data[0].content,
@@ -77,7 +84,7 @@ const Editarticle = (props) => {
     };
 
     const handleChange=(e)=>{
-        if(e.target.name==="image")
+        if(e.target.name==="image" || e.target.name==="file")
         {
             setValue1({...value1,[e.target.name]:e.target.files[0]});
         }
@@ -85,7 +92,6 @@ const Editarticle = (props) => {
         {
             setValue1({...value1,[e.target.name]:e.target.value});
         }
-        
     }
 
     const handleSubmit=async (e)=>{
@@ -101,7 +107,7 @@ const Editarticle = (props) => {
         }
         console.log(str.slice(0,-1));
 
-        let ans = await context.updatePost({id, title: value1.title,type: "test Type",slug: value1.slug,categories: str,content: value.richText,file_link: value1.image,status: value1.status, created_by_user: "1111111" });
+        let ans = await context.updatePost({id, title: value1.title,type: "test Type",slug: value1.slug,categories: str.slice(0,-1),content: value.richText,file_link: value1.image,status: value1.status, created_by_user: "1" });
         
         console.log(ans);
         if(ans.status)
@@ -129,10 +135,18 @@ const Editarticle = (props) => {
                     <TextField id="slug" label="URL Slug" sx={{ width: "100%" }} name="slug" onChange={handleChange} value={value1.slug} variant="outlined" />
                 </div>
                 <div style={{ marginBottom: "12px" }}>
+                    <h3>Select Categories</h3>
+                    <MultiSelect
+                        options={options}
+                        value={selected}
+                        onChange={setSelected}
+                        labelledBy="Select"
+                    />
+                </div>
+                <div style={{ marginBottom: "12px" }}>
                     <h3>Content</h3>
                     <ReactQuill theme="snow" value={value.richText} placeholder="Write here .." onChange={rteChange1} modules={{ toolbar: toolbarOptions }} />
                 </div>
-
                 <div style={{ marginBottom: "12px" }}>
                     <h3>Select Status</h3>
                     <FormControl fullWidth>
@@ -149,18 +163,15 @@ const Editarticle = (props) => {
                     </FormControl>
                 </div>
                 <div style={{ marginBottom: "12px" }}>
+                    <h3>Upload File</h3>
+                    <input type="file" name="file" onChange={handleChange} id="file" />
+                </div>
+                
+                {/* <div style={{ marginBottom: "12px" }}>
                     <h3>Upload Featured Image</h3>
                     <input type="file" name="image" onChange={handleChange} id="image" />
-                </div>
-                <div style={{ marginBottom: "12px" }}>
-                    <h3>Select Categories</h3>
-                    <MultiSelect
-                        options={options}
-                        value={selected}
-                        onChange={setSelected}
-                        labelledBy="Select"
-                    />
-                </div>
+                </div> */}
+
                 <Button type="submit" color="primary" variant="contained">Submit</Button>
             </form>
         </>

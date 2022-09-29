@@ -26,11 +26,7 @@ var toolbarOptions = [
     ['clean']
 ];
 
-const options = [
-    { label: "Grapes 🍇", value: "grapes" },
-    { label: "Mango 🥭", value: "mango" },
-    { label: "Strawberry 🍓", value: "strawberry", disabled: true },
-];
+const options = [];
 
 const Editpodcast = (props) => {
     const [value1, setValue1] = useState({
@@ -38,6 +34,7 @@ const Editpodcast = (props) => {
         slug: "",
         video: "",
         status: "",
+        featuredImage:""
     });
     const [value, setValue] = useState({
         richText: '',
@@ -53,13 +50,23 @@ const Editpodcast = (props) => {
     }, []);
 
     const getData = async () => {
+        const ans1=await context.getCategory();
+        for(let i of ans1.data)
+        {
+            options.push({
+                label:i.name,
+                value:i.id
+            });
+        }
+
         const ans = await context.getPodcast(id);
         console.log(ans.data[0]);
         setValue1({
             title: ans.data[0].name,
-            slug: "",
+            slug: ans.data[0].slug,
             video: "",
-            status: ans.data[0].status.toLowerCase()
+            status: ans.data[0].status.toLowerCase(),
+            featuredImage:""
         });
     };
 
@@ -72,7 +79,7 @@ const Editpodcast = (props) => {
     };
 
     const handleChange = (e) => {
-        if (e.target.name === "video") {
+        if (e.target.name === "video" || e.target.name === "featuredImage") {
             setValue1({ ...value1, [e.target.name]: e.target.files[0] });
         }
         else {
@@ -93,7 +100,7 @@ const Editpodcast = (props) => {
 
         console.log(str.slice(0, -1));
 
-        let ans = await context.updatePodcast({id, photos: value1.video, name: value1.title, status: value1.status});
+        let ans = await context.updatePodcast({ id, podcast: value1.video, status:value1.status, name: value1.title, UserId: "1", slug: value1.slug, content: value.richText, PodcastCategoryId: str, featuredImage:value1.featuredImage });
         console.log(ans);
         if(ans.status)
         {
@@ -121,6 +128,15 @@ const Editpodcast = (props) => {
                     <TextField id="slug" label="Slug" sx={{ width: "100%" }} name="slug" onChange={handleChange} value={value1.slug} variant="outlined" />
                 </div>
                 <div style={{ marginBottom: "12px" }}>
+                    <h3>Select Categories</h3>
+                    <MultiSelect
+                        options={options}
+                        value={selected}
+                        onChange={setSelected}
+                        labelledBy="Select"
+                    />
+                </div>
+                <div style={{ marginBottom: "12px" }}>
                     <h3>Write Description</h3>
                     <ReactQuill theme="snow" value={value.richText} placeholder="Write here .." onChange={rteChange1} modules={{ toolbar: toolbarOptions }} />
                 </div>
@@ -143,15 +159,10 @@ const Editpodcast = (props) => {
                     <h3>Upload File</h3>
                     <input type="file" name="video" onChange={handleChange} id="video" />
                 </div>
-                <div style={{ marginBottom: "12px" }}>
-                    <h3>Select Categories</h3>
-                    <MultiSelect
-                        options={options}
-                        value={selected}
-                        onChange={setSelected}
-                        labelledBy="Select"
-                    />
-                </div>
+                {/* <div style={{ marginBottom: "12px" }}>
+                    <h3>Upload Featured Image</h3>
+                    <input type="file" name="featuredImage" onChange={handleChange} id="featuredImage" />
+                </div> */}
                 <Button type="submit" color="primary" variant="contained">Submit</Button>
             </form>
         </>

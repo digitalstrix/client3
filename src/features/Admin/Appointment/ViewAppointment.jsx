@@ -44,24 +44,27 @@ const Viewappointment = (props) => {
                     <div className="row">
                         {data ? data.map((e, index) => {
                             return (
-                                <Card sx={{ maxWidth: 345, margin:'6px' }}>
+                                <Card key={index} sx={{ maxWidth: 345, margin:'6px' }}>
                                     <CardContent>
                                         <Typography gutterBottom variant="h5" component="div">
-                                            Patient Name
+                                            {e.patient_name}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            {`Appointment ID | ${e.date} - ${e.time}`}
+                                            {`${e.id} | ${e.date} - ${e.time}`}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            Doctor Name
+                                            {e.doctor_name}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
+                                            {e.status}
+                                        </Typography>
+                                        {/* <Typography variant="body2" color="text.secondary">
                                             This will be the description (Limited words, Click read more to see..)
-                                        </Typography>
+                                        </Typography> */}
                                     </CardContent>
                                     <CardActions>
-                                        <Button size="small">Share</Button>
-                                        <NavLink to="/appointment-details/1">Read More ..</NavLink>
+                                        {/* <Button size="small">Share</Button> */}
+                                        <NavLink to={`/appointment-details/${e.id}`}>Read More ..</NavLink>
                                     </CardActions>
                                 </Card>
                             )

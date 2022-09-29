@@ -25,11 +25,7 @@ var toolbarOptions = [
     ['clean']
 ];
 
-const options = [
-    { label: "Grapes 🍇", value: "grapes" },
-    { label: "Mango 🥭", value: "mango" },
-    { label: "Strawberry 🍓", value: "strawberry", disabled: true },
-];
+const options = [];
 
 const Createpodcast = (props) => {
     const [value1, setValue1] = useState({
@@ -37,6 +33,7 @@ const Createpodcast = (props) => {
         slug: "",
         video: "",
         status: "",
+        featuredImage:""
     });
     const [value, setValue] = useState({
         richText: '',
@@ -45,6 +42,21 @@ const Createpodcast = (props) => {
     });
     const [selected, setSelected] = useState([]);
     const context = useContext(MainContext);
+    
+    useEffect(()=>{
+        getData();
+    },[]);
+
+    const getData=async()=>{
+        const ans=await context.getCategory();
+        for(let i of ans.data)
+        {
+            options.push({
+                label:i.name,
+                value:i.id
+            });
+        }
+    };
 
     const rteChange1 = (content, delta, source, editor) => {
         setValue({
@@ -55,7 +67,7 @@ const Createpodcast = (props) => {
     };
 
     const handleChange = (e) => {
-        if (e.target.name === "video") {
+        if (e.target.name === "video" || e.target.name==="featuredImage") {
             setValue1({ ...value1, [e.target.name]: e.target.files[0] });
         }
         else {
@@ -76,7 +88,7 @@ const Createpodcast = (props) => {
 
         console.log(str.slice(0, -1));
 
-        let ans = await context.createPodcast({ photos: value1.video, name: value1.title, UserId: "1111111", slug: value1.slug, content: value.richText, PodcastCategoryId: 1 });
+        let ans = await context.createPodcast({ podcast: value1.video, name: value1.title, UserId: "1", slug: value1.slug, content: value.richText, PodcastCategoryId: str.slice(0, -1), featuredImage:value1.featuredImage });
         console.log(ans);
         if (ans.status) {
             props.showAlert(true);
@@ -102,6 +114,15 @@ const Createpodcast = (props) => {
                     <TextField id="slug" label="Slug" sx={{ width: "100%" }} name="slug" onChange={handleChange} value={value1.slug} variant="outlined" />
                 </div>
                 <div style={{ marginBottom: "12px" }}>
+                    <h3>Select Categories</h3>
+                    <MultiSelect
+                        options={options}
+                        value={selected}
+                        onChange={setSelected}
+                        labelledBy="Select"
+                    />
+                </div>
+                <div style={{ marginBottom: "12px" }}>
                     <h3>Write Description</h3>
                     <ReactQuill theme="snow" value={value.richText} placeholder="Write here .." onChange={rteChange1} modules={{ toolbar: toolbarOptions }} />
                 </div>
@@ -125,13 +146,8 @@ const Createpodcast = (props) => {
                     <input type="file" name="video" onChange={handleChange} id="video" />
                 </div>
                 <div style={{ marginBottom: "12px" }}>
-                    <h3>Select Categories</h3>
-                    <MultiSelect
-                        options={options}
-                        value={selected}
-                        onChange={setSelected}
-                        labelledBy="Select"
-                    />
+                    <h3>Upload Featured Image</h3>
+                    <input type="file" name="featuredImage" onChange={handleChange} id="featuredImage" />
                 </div>
                 <Button type="submit" color="primary" variant="contained">Submit</Button>
             </form>

@@ -19,3 +19,9 @@
 .content{
     margin-top: 2rem;
 }
+.dropdown-content{
+    z-index: 999 !important;
+}
+.ql-editor{
+    min-height: 300px !important;
+}

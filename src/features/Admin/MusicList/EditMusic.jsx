@@ -26,18 +26,15 @@ var toolbarOptions = [
     ['clean']
 ];
 
-const options = [
-    { label: "Grapes 🍇", value: "grapes" },
-    { label: "Mango 🥭", value: "mango" },
-    { label: "Strawberry 🍓", value: "strawberry", disabled: true },
-];
+const options = [];
 
 const Editmusic = (props) => {
     const [value1, setValue1] = useState({
         title:"",
         music:"",
         slug:"",
-        status:""
+        status:"",
+        featuredImage:""
     });
 
     const [value, setValue] = useState({
@@ -54,13 +51,23 @@ const Editmusic = (props) => {
     },[]);
 
     const getData=async()=>{
+        const ans1=await context.getCategory();
+        for(let i of ans1.data)
+        {
+            options.push({
+                label:i.name,
+                value:i.id
+            });
+        }
+
         const ans=await context.getMusic(id);
         console.log(ans.data[0]);
         setValue1({
             title:ans.data[0].name,
             music:"",
             status:ans.data[0].status.toLowerCase(),
-            slug:""
+            slug:"",
+            featuredImage:""
         });
     };
 
@@ -73,7 +80,7 @@ const Editmusic = (props) => {
     };
 
     const handleChange=(e)=>{
-        if(e.target.name==="music")
+        if(e.target.name==="music" || e.target.name==="featuredImage")
         {
             setValue1({...value1,[e.target.name]:e.target.files[0]});
         }
@@ -98,7 +105,7 @@ const Editmusic = (props) => {
 
         const ans = await context.updateMusic({id, music: value1.music, name: value1.title, status:value1.status});
         console.log(ans);
-        if(ans.success)
+        if(ans.status)
         {
             props.showAlert(true);
         }
@@ -118,14 +125,23 @@ const Editmusic = (props) => {
                     <h3>Title</h3>
                     <TextField id="title" label="Title" sx={{ width: "100%" }} name="title" onChange={handleChange} value={value1.title} variant="outlined" />
                 </div>
-                <div>
+                {/* <div>
                     <h3>URL Slug</h3>
                     <TextField id="slug" label="Slug" sx={{ width: "100%" }} name="slug" onChange={handleChange} value={value1.slug} variant="outlined" />
-                </div>
-                <div style={{ marginBottom: "12px" }}>
+                </div> */}
+                {/* <div style={{ marginBottom: "12px" }}>
+                    <h3>Select Categories</h3>
+                    <MultiSelect
+                        options={options}
+                        value={selected}
+                        onChange={setSelected}
+                        labelledBy="Select"
+                    />
+                </div> */}
+                {/* <div style={{ marginBottom: "12px" }}>
                     <h3>Write Description</h3>
                     <ReactQuill theme="snow" value={value.richText} placeholder="Write here .." onChange={rteChange1} modules={{ toolbar: toolbarOptions }} />
-                </div>
+                </div> */}
                 <div style={{ marginBottom: "12px" }}>
                     <h3>Select Status</h3>
                     <FormControl fullWidth>
@@ -145,15 +161,11 @@ const Editmusic = (props) => {
                     <h3>Upload File</h3>
                     <input type="file" name="music" onChange={handleChange} id="music" />
                 </div>
-                <div style={{ marginBottom: "12px" }}>
-                    <h3>Select Categories</h3>
-                    <MultiSelect
-                        options={options}
-                        value={selected}
-                        onChange={setSelected}
-                        labelledBy="Select"
-                    />
-                </div>
+                {/* <div style={{ marginBottom: "12px" }}>
+                    <h3>Upload Featured Image</h3>
+                    <input type="file" name="featuredImage" onChange={handleChange} id="featuredImage" />
+                </div> */}
+
                 <Button type="submit" color="primary" variant="contained">Submit</Button>
             </form>
         </>

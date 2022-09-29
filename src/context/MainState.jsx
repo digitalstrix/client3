@@ -2,7 +2,7 @@ import React from 'react'
 import MainContext from './MainContext'
 
 // const baseUrl = 'http://localhost:5000';
-const baseUrl = 'http://ap-2.celestiq.com:5000';
+const baseUrl = 'https://immunify-backend.herokuapp.com';
 
 const Mainstate = (props) => {
     // const getPodcast = async (id = '', name = '', UserId = '', author = '') => {
@@ -34,19 +34,19 @@ const Mainstate = (props) => {
     const createPodcast = async (data1) => {
         try {
             // console.log(data1);
-            const formData = new FormData();
-            formData.append("photos", data1.photos);
-            formData.append("name", data1.name);
-            formData.append("UserId", data1.UserId);
-            formData.append("slug", data1.slug);
-            formData.append("content", data1.content);
-            formData.append("PodcastCategoryId", data1.PodcastCategoryId);
+            var formdata = new FormData();
+            formdata.append("podcast", data1.podcast);
+            formdata.append("name", data1.name);
+            formdata.append("UserId", data1.UserId);
+            formdata.append("slug", data1.slug);
+            formdata.append("content", data1.content);
+            formdata.append("PodcastCategoryId", data1.PodcastCategoryId);
+            formdata.append("featuredImage", data1.featuredImage);
+
             const response = await fetch(`${baseUrl}/podcast/upload`, {
                 method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(data1)
+                redirect: 'follow',
+                body: formdata
             });
             const data = await response.json();
             console.log(data);
@@ -58,17 +58,18 @@ const Mainstate = (props) => {
 
     const updatePodcast = async (data1) => {
         try {
-            const formData = new FormData();
-            formData.append("name", data1.name);
-            formData.append("status", data1.status);
-            formData.append("photos", data1.photos);
+            var formdata = new FormData();
+            formdata.append("name", data1.name);
+            formdata.append("status", data1.status);
+            formdata.append("podcast", data1.podcast);
+            formdata.append("slug", data1.slug);
+            formdata.append("content", data1.content);
+            formdata.append("PodcastCategoryId", data1.PodcastCategoryId);
 
             const response = await fetch(`${baseUrl}/podcast/update?id=${data1.id}`, {
                 method: "PATCH",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: formData
+                redirect: 'follow',
+                body: formdata
             });
             const data = await response.json();
             console.log(data);
@@ -82,9 +83,7 @@ const Mainstate = (props) => {
         try {
             const response = await fetch(`${baseUrl}/podcast/delete/${id}`, {
                 method: "DELETE",
-                headers: {
-                    'content-type': 'application/json'
-                }
+                redirect: 'follow',
             });
             const data = await response.json();
             console.log(data);
@@ -99,6 +98,7 @@ const Mainstate = (props) => {
         try {
             // const response = await fetch(`${baseUrl}/blog/get?id=${id}&title=${title}&type=${type}&slug=${slug}?categories=${categories}`, {
             let url;
+            console.log(id);
             if (id !== '') {
                 url = `${baseUrl}/blog/get?id=${id}`;
             }
@@ -121,16 +121,35 @@ const Mainstate = (props) => {
     };
 
     const createPost = async (data1) => {
+        console.log(data1);
         try {
+            const formdata = new FormData();
+            formdata.append("title", data1.title);
+            formdata.append("slug", data1.slug);
+            formdata.append("content", data1.content);
+            formdata.append("post", data1.file);
+            formdata.append("UserId", data1.created_by_user);
+            formdata.append("PostCategoryId", data1.categories);
+            formdata.append("type", data1.type);
+            formdata.append("featuredImage", data1.file_link);
+
             const response = await fetch(`${baseUrl}/blog/create`, {
                 method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(data1)
+                redirect: 'follow',
+                body: formdata
             });
             const data = await response.json();
             console.log(data);
+            // var requestOptions = {
+            //     method: 'POST',
+            //     body: formdata,
+            //     redirect: 'follow'
+            //   };
+              
+            //   fetch(`${baseUrl}/blog/create`, requestOptions)
+            //     .then(response => response.text())
+            //     .then(result => console.log(result))
+            //     .catch(error => console.log('error', error));
             return data;
         } catch (error) {
             console.log(error);
@@ -139,12 +158,19 @@ const Mainstate = (props) => {
 
     const updatePost = async (data1) => {
         try {
+            const formdata = new FormData();
+            formdata.append("title", data1.title);
+            formdata.append("slug", data1.slug);
+            formdata.append("content", data1.content);
+            formdata.append("post", data1.file);
+            formdata.append("UserId", data1.created_by_user);
+            formdata.append("PostCategoryId", data1.categories);
+            formdata.append("type", data1.type);
+
             const response = await fetch(`${baseUrl}/blog/update?id=${data1.id}`, {
                 method: "PATCH",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(data1)
+                redirect: 'follow',
+                body: formdata
             });
             const data = await response.json();
             console.log(data);
@@ -158,9 +184,7 @@ const Mainstate = (props) => {
         try {
             const response = await fetch(`${baseUrl}/blog/delete/${id}`, {
                 method: "DELETE",
-                headers: {
-                    'content-type': 'application/json'
-                },
+                redirect: 'follow',
                 body: JSON.stringify({ user })
             });
             const data = await response.json();
@@ -204,17 +228,17 @@ const Mainstate = (props) => {
             formData.append("whitenoise", data.whitenoise);
             formData.append("name", data.name);
             formData.append("UserId", data.UserId);
+            formData.append("status", data.status);
+            formData.append("featuredImage", data.featuredImage);
 
             const response = await fetch(`${baseUrl}/whitenoise/upload`, {
                 method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
+                redirect: 'follow',
                 body: formData
             });
-            const data = await response.json();
-            console.log(data);
-            return data;
+            const data1 = await response.json();
+            console.log(data1);
+            return data1;
         } catch (error) {
             console.log(error);
         }
@@ -229,14 +253,12 @@ const Mainstate = (props) => {
 
             const response = await fetch(`${baseUrl}/whitenoise/update?id=${data.id}`, {
                 method: "PATCH",
-                headers: {
-                    'content-type': 'application/json'
-                },
+                redirect: 'follow',
                 body: formData
             });
-            const data = await response.json();
-            console.log(data);
-            return data;
+            const data1 = await response.json();
+            console.log(data1);
+            return data1;
         } catch (error) {
             console.log(error);
         }
@@ -246,9 +268,7 @@ const Mainstate = (props) => {
         try {
             const response = await fetch(`${baseUrl}/whitenoise/delete/${id}`, {
                 method: "DELETE",
-                headers: {
-                    'content-type': 'application/json'
-                }
+                redirect: 'follow',
             });
             const data = await response.json();
             console.log(data);
@@ -290,17 +310,17 @@ const Mainstate = (props) => {
             formData.append("music", data.music);
             formData.append("name", data.name);
             formData.append("UserId", data.UserId);
+            formData.append("status", data.status);
+            formData.append("featuredImage", data.featuredImage);
 
             const response = await fetch(`${baseUrl}/music/upload`, {
                 method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
+                redirect: 'follow',
                 body: formData
             });
-            const data = await response.json();
-            console.log(data);
-            return data;
+            const data1 = await response.json();
+            console.log(data1);
+            return data1;
         } catch (error) {
             console.log(error);
         }
@@ -315,14 +335,12 @@ const Mainstate = (props) => {
 
             const response = await fetch(`${baseUrl}/music/update?id=${data.id}`, {
                 method: "PATCH",
-                headers: {
-                    'content-type': 'application/json'
-                },
+                redirect: 'follow',
                 body: formData
             });
-            const data = await response.json();
-            console.log(data);
-            return data;
+            const data1 = await response.json();
+            console.log(data1);
+            return data1;
         } catch (error) {
             console.log(error);
         }
@@ -332,9 +350,7 @@ const Mainstate = (props) => {
         try {
             const response = await fetch(`${baseUrl}/music/delete/${id}`, {
                 method: "DELETE",
-                headers: {
-                    'content-type': 'application/json'
-                }
+                redirect: 'follow',
             });
             const data = await response.json();
             console.log(data);
@@ -345,10 +361,18 @@ const Mainstate = (props) => {
     };
 
     // const getQuestion = async (id = '', question = '', status = '', author = '') => {
-    const getQuestion = async () => {
+    const getQuestion = async (id = '') => {
         try {
             // const response = await fetch(`${baseUrl}/question/get?id=${id}&question=${question}&status=${status}&author=${author}`, {
-            const response = await fetch(`${baseUrl}/question/get`, {
+            let url;
+            if (id !== '') {
+                url = `${baseUrl}/question/get?id=${id}`;
+            }
+            else {
+                url = `${baseUrl}/question/get`;
+            }
+
+            const response = await fetch(url, {
                 method: "GET",
                 headers: {
                     'content-type': 'application/json'
@@ -364,20 +388,14 @@ const Mainstate = (props) => {
 
     const createQuestion = async (data) => {
         try {
-            const formData = new FormData();
-            formData.append("question", data.question);
-            formData.append("UserId", data.UserId);
-
             const response = await fetch(`${baseUrl}/question/create`, {
                 method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: formData
+                redirect: 'follow',
+                body: JSON.stringify(data)
             });
-            const data = await response.json();
-            console.log(data);
-            return data;
+            const data1 = await response.json();
+            console.log(data1);
+            return data1;
         } catch (error) {
             console.log(error);
         }
@@ -385,19 +403,17 @@ const Mainstate = (props) => {
 
     const updateQuestion = async (data) => {
         try {
-            const formData = new FormData();
-            formData.append("question", data.question);
-
+            // console.log(data);
+            var formdata = new FormData();
+            formdata.append("question",data.question);
             const response = await fetch(`${baseUrl}/question/update?id=${data.id}`, {
                 method: "PATCH",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: formData
+                redirect: 'follow',
+                body: formdata
             });
-            const data = await response.json();
-            console.log(data);
-            return data;
+            const data1 = await response.json();
+            console.log(data1);
+            return data1;
         } catch (error) {
             console.log(error);
         }
@@ -407,9 +423,7 @@ const Mainstate = (props) => {
         try {
             const response = await fetch(`${baseUrl}/question/delete/${id}`, {
                 method: "DELETE",
-                headers: {
-                    'content-type': 'application/json'
-                }
+                redirect: 'follow',
             });
             const data = await response.json();
             console.log(data);
@@ -446,14 +460,12 @@ const Mainstate = (props) => {
 
             const response = await fetch(`${baseUrl}/answer/create`, {
                 method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
+                redirect: 'follow',
                 body: formData
             });
-            const data = await response.json();
-            console.log(data);
-            return data;
+            const data1 = await response.json();
+            console.log(data1);
+            return data1;
         } catch (error) {
             console.log(error);
         }
@@ -467,14 +479,12 @@ const Mainstate = (props) => {
 
             const response = await fetch(`${baseUrl}/answer/update?id=${data.id}`, {
                 method: "PATCH",
-                headers: {
-                    'content-type': 'application/json'
-                },
+                redirect: 'follow',
                 body: formData
             });
-            const data = await response.json();
-            console.log(data);
-            return data;
+            const data1 = await response.json();
+            console.log(data1);
+            return data1;
         } catch (error) {
             console.log(error);
         }
@@ -516,13 +526,16 @@ const Mainstate = (props) => {
 
     const createCategory = async (data) => {
         try {
-            console.log(data);
+            // console.log(data);
+            var formdata = new FormData();
+            formdata.append("name",data.name);
+            formdata.append("description",data.description);
+            formdata.append("type",data.type);
+            formdata.append("created_by_user",data.created_by_user);
             const response = await fetch(`${baseUrl}/category/create`, {
                 method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
+                redirect: 'follow',
+                body: formdata
             });
             const data1 = await response.json();
             console.log(data1);
@@ -534,12 +547,14 @@ const Mainstate = (props) => {
 
     const updateCategory = async (data1) => {
         try {
+            var formdata = new FormData();
+            formdata.append("name",data1.name);
+            formdata.append("description",data1.description);
+            formdata.append("status",data1.status);
             const response = await fetch(`${baseUrl}/category/update?id=${data1.id}`, {
                 method: "PATCH",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(data1)
+                redirect: 'follow',
+                body: formdata
             });
             const data = await response.json();
             console.log(data);
@@ -553,9 +568,7 @@ const Mainstate = (props) => {
         try {
             const response = await fetch(`${baseUrl}/category/delete/${id}`, {
                 method: "DELETE",
-                headers: {
-                    'content-type': 'application/json'
-                },
+                redirect: 'follow',
                 body: JSON.stringify({ user })
             });
             const data = await response.json();
@@ -585,12 +598,16 @@ const Mainstate = (props) => {
 
     const createAppointment = async (data1) => {
         try {
+            var formdata = new FormData();
+            formdata.append("date",data1.date);
+            formdata.append("time",data1.time);
+            formdata.append("patient_name",data1.patient_name);
+            formdata.append("doctor_name",data1.doctor_name);
+            formdata.append("UserId",data1.UserId);
             const response = await fetch(`${baseUrl}/appointment/create`, {
                 method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(data1)
+                redirect: 'follow',
+                body: formdata
             });
             const data = await response.json();
             console.log(data);
@@ -604,9 +621,7 @@ const Mainstate = (props) => {
         try {
             const response = await fetch(`${baseUrl}/appointment/update?id=${data1.id}`, {
                 method: "PATCH",
-                headers: {
-                    'content-type': 'application/json'
-                },
+                redirect: 'follow',
                 body: JSON.stringify(data1)
             });
             const data = await response.json();
@@ -621,9 +636,7 @@ const Mainstate = (props) => {
         try {
             const response = await fetch(`${baseUrl}/appointment/delete/${id}`, {
                 method: "DELETE",
-                headers: {
-                    'content-type': 'application/json'
-                }
+                redirect: 'follow',
             });
             const data = await response.json();
             console.log(data);

@@ -32,7 +32,6 @@ const Createappointment = (props) => {
     const [value1, setValue1] = useState({
         patientName: "",
         appointmentID: "",
-        appointmentTs: "",
         doctorName: ''
     });
     const context = useContext(MainContext);
@@ -67,7 +66,7 @@ const Createappointment = (props) => {
         console.log(new Date(dateTime.toJSON()).toLocaleDateString());
         console.log(new Date(dateTime.toJSON()).toLocaleTimeString());
 
-        const ans = await context.createAppointment({date: new Date(dateTime.toJSON()).toLocaleDateString(), time: new Date(dateTime.toJSON()).toLocaleTimeString(), UserId: "02", patient_name: value1.patientName, doctor_name: value1.doctorName });
+        const ans = await context.createAppointment({date: new Date(dateTime.toJSON()).toLocaleDateString(), time: new Date(dateTime.toJSON()).toLocaleTimeString(), UserId: "1", patient_name: value1.patientName, doctor_name: value1.doctorName });
         console.log(ans);
         if(ans.status)
         {
@@ -89,10 +88,10 @@ const Createappointment = (props) => {
                     <h3>Patient Name</h3>
                     <TextField id="patientName" label="Patient Name" sx={{ width: "100%" }} name="patientName" onChange={handleChange} value={value1.patientName} variant="outlined" />
                 </div>
-                <div style={{ marginBottom: "20px" }}>
+                {/* <div style={{ marginBottom: "20px" }}>
                     <h3>Appointment ID</h3>
                     <TextField id="appointmentID" label="Appointment ID" sx={{ width: "100%" }} name="appointmentID" onChange={handleChange} value={value1.appointmentID} variant="outlined" />
-                </div>
+                </div> */}
                 <div>
                     <h3>Appointment Date and Time</h3>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -109,10 +108,10 @@ const Createappointment = (props) => {
                     <TextField id="doctorName" label="Doctor Name" sx={{ width: "100%" }} name="doctorName" onChange={handleChange} value={value1.doctorName} variant="outlined" />
                 </div>
 
-                <div style={{ marginBottom: "12px" }}>
+                {/* <div style={{ marginBottom: "12px" }}>
                     <h3>Appointment Details</h3>
                     <ReactQuill theme="snow" value={value.richText} placeholder="Write here .." onChange={rteChange1} modules={{ toolbar: toolbarOptions }} />
-                </div>
+                </div> */}
                 <Button type="submit" color="primary" variant="contained">Submit</Button>
             </form>
         </>
